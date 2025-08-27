@@ -8,11 +8,17 @@
  * @return mysqli A MySQL database connection object
  */
     function db() {
-        // Database configuration
-        $host = "localhost";
-        $user = "Farhan Alam";
-        $pass = "password@123";
-        $db = "bca-6th-sem";
+        // Database configuration for local development
+        // $host = "localhost";
+        // $user = "Farhan Alam";
+        // $pass = "password@123";
+        // $db = "bca-6th-sem";
+        
+        // Database configuration for production
+        $host = "db";
+        $user = "root";
+        $pass = "example";
+        $db = "php_journey";
         
         // Create connection
         $conn = new mysqli($host, $user, $pass, $db);
