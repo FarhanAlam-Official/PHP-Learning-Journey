@@ -1,8 +1,11 @@
 <?php
-$host = "localhost";
-$user = "Farhan Alam";
-$pass = "password@123";
-$db = "bca-6th-sem";
+include __DIR__ . '/../db.php';
+
+//local development
+// $host = "localhost";
+// $user = "Farhan Alam";
+// $pass = "password@123";
+// $db = "bca-6th-sem";
 
 $conn = new mysqli($host, $user, $pass, $db);
 

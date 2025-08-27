@@ -2,10 +2,14 @@
 // Start session to access session variables
 session_start();
 
-$host = "localhost";
-$user = "Farhan Alam";
-$pass = "password@123";
-$db = "bca-6th-sem";
+// Database connection
+include __DIR__ . '/../db.php';
+
+//local development
+// $host = "localhost";
+// $user = "Farhan Alam";
+// $pass = "password@123";
+// $db = "bca-6th-sem";
 
 $conn = new mysqli($host, $user, $pass, $db);
 
