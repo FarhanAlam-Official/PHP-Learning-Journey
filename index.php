@@ -489,6 +489,54 @@
             margin-top: 8px;
         }
 
+        /* Timeline */
+        .timeline-section {
+            background: var(--white);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 28px;
+            margin: 28px 0;
+        }
+        .timeline-header { text-align: center; max-width: 860px; margin: 0 auto 12px; }
+        .timeline-title { font-weight: 800; font-size: clamp(1.6rem, 1.4vw + 1rem, 2rem); letter-spacing: -0.2px; color: var(--dark); }
+        .timeline-subtext { margin-top: 8px; color: var(--muted); }
+        .timeline-track { position: relative; margin-top: 22px; }
+        .timeline-axis { position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; transform: translateX(-50%); background:
+            repeating-linear-gradient( to bottom, rgba(79,70,229,.35) 0 16px, rgba(255,255,255,1) 16px 26px ); border-radius: 999px; box-shadow: 0 0 0 6px rgba(79,70,229,.08); }
+        .timeline-items { display: flex; flex-direction: column; gap: 18px; }
+        .timeline-item { display: flex; align-items: center; gap: 16px; }
+        .tl-col { flex: 1 1 50%; }
+        .tl-col.left { text-align: right; padding-right: 18px; }
+        .tl-col.right { text-align: left; padding-left: 18px; }
+        .tl-node { z-index: 1; display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px; border-radius: 999px; background: #ffffff; border: 6px solid var(--light); box-shadow: 0 10px 22px rgba(15,23,42,.10); }
+        .tl-node-inner { width: 36px; height: 36px; border-radius: 999px; background: var(--primary-light); display: inline-flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 900; }
+        .tl-node-inner.is-complete { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; }
+        .tl-card { display: inline-block; max-width: 420px; background: var(--white); border: 1px solid rgba(226,232,240,.9); border-radius: 14px; box-shadow: var(--box-shadow); padding: 14px; text-align: left; }
+        .tl-title { font-weight: 700; color: var(--dark); }
+        .tl-desc { color: var(--muted); margin-top: 6px; font-size: .95rem; }
+        .tl-actions { margin-top: 10px; }
+        .tl-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: var(--white); color: var(--primary); border: 1px solid rgba(226,232,240,.9); font-weight: 700; text-decoration: none; cursor: pointer; }
+        .tl-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .tl-btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border-color: transparent; box-shadow: 0 12px 24px rgba(79,70,229,.22); }
+        .tl-btn-primary:hover { filter: brightness(1.05); box-shadow: 0 14px 28px rgba(79,70,229,.28); }
+        .tl-enc { margin-top: 10px; padding: 10px 12px; background: #f8fafc; border: 1px dashed rgba(226,232,240,.9); border-radius: 10px; color: var(--gray); display: none; }
+        .dialog-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.35); display: none; align-items: center; justify-content: center; z-index: 200; }
+        .dialog-backdrop.open { display: flex; }
+        .dialog { background: #fff; border: 1px solid rgba(226,232,240,.9); border-radius: 14px; box-shadow: 0 20px 40px rgba(15,23,42,.18); max-width: 520px; width: calc(100% - 32px); padding: 18px; }
+        .dialog h4 { font-size: 1.2rem; font-weight: 800; color: var(--dark); }
+        .dialog p { color: var(--gray); margin-top: 8px; }
+        .dialog .dialog-actions { margin-top: 14px; text-align: right; }
+        .dialog .close-btn { padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(226,232,240,.9); background: #fff; font-weight: 700; }
+        .dialog .close-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* Overlay loader for Learning Path */
+        .lp-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.55); display: none; align-items: center; justify-content: center; z-index: 300; }
+        .lp-overlay.open { display: flex; }
+        .lp-panel { width: min(1100px, calc(100% - 28px)); max-height: calc(100% - 28px); overflow: auto; background: #fff; border: 1px solid rgba(226,232,240,.9); border-radius: 16px; box-shadow: 0 30px 60px rgba(15,23,42,.25); position: relative; }
+        .lp-close { position: absolute; top: 10px; right: 10px; border: 1px solid rgba(226,232,240,.9); background: #fff; color: var(--gray); border-radius: 10px; padding: 6px 10px; font-weight: 800; cursor: pointer; }
+        .lp-close:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
         /* Content container */
         .container {
             background-color: var(--white);
@@ -861,6 +909,7 @@
                     <a href="#overview">Overview</a>
                     <a href="#progress">Progress</a>
                     <a href="#days">Days</a>
+                    <a href="./path.php">Learning Path</a>
                     <a class="link-btn" href="https://github.com/FarhanAlam-Official" target="_blank" rel="noopener noreferrer">GitHub</a>
                 </div>
                 <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
@@ -1020,6 +1069,7 @@
             </div>
         </footer>
         <button id="backToTopFab" aria-label="Back to top" title="Back to top" type="button">↑</button>
+        
     </div>
 
     <script>
@@ -1086,6 +1136,19 @@
                     }
                 });
             }
+
+            // Removed overlay loader (Path is now a standalone page)
+
+            // Inline encouragement reveal (no modal)
+            document.querySelectorAll('.tl-btn-primary').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var milestone = btn.getAttribute('data-encouragement') || 'your milestone';
+                    var box = btn.closest('.tl-card').querySelector('.tl-enc');
+                    if (!box) return;
+                    box.style.display = 'block';
+                    box.textContent = 'Great job on ' + milestone + '! You\'re building real skills. Keep the momentum—next step is even easier than you think.';
+                });
+            });
         })();
     </script>
 </body>
