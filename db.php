@@ -23,8 +23,16 @@
             'DB_NAME' => getenv('DB_NAME')
         ];
         
+        // Check for Docker environment variables first
+        if (getenv('PHP_DB_HOST')) {
+            // Docker environment
+            $host = getenv('PHP_DB_HOST') ?: 'db';
+            $user = getenv('PHP_DB_USER') ?: 'root';
+            $pass = getenv('PHP_DB_PASS') ?: 'example';
+            $db = getenv('PHP_DB_NAME') ?: 'php_journey';
+        }
         // Check if we're in Railway environment
-        if (getenv('RAILWAY_ENVIRONMENT') || getenv('DATABASE_URL')) {
+        elseif (getenv('RAILWAY_ENVIRONMENT') || getenv('DATABASE_URL')) {
             // Railway environment - use environment variables
             $host = getenv('DB_HOST') ?: 'localhost';
             $user = getenv('DB_USER') ?: 'root';
