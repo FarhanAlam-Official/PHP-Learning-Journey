@@ -1,6 +1,4 @@
 <?php
-// Database connection
-include __DIR__ . '/db.php';
 
 //local development
 // $host = "localhost";
@@ -8,21 +6,26 @@ include __DIR__ . '/db.php';
 // $pass = "password@123";
 // $db = "bca-6th-sem";
 
+// $conn = mysqli_connect($host, $user, $pass, $db);
 
-$conn = mysqli_connect($host, $user, $pass, $db);
+// Production connection
+include __DIR__ . '/db.php';
+
+// Use the db() function to get connection
+$conn = db();
 
 // Check connection
-if (!$conn) {
-    $connection_status = "<p class='error'>Connection failed: " . mysqli_connect_error() . "</p>";
+if ($conn->connect_error) {
+    $connection_status = "<p class='error'>Connection failed: " . $conn->connect_error . "</p>";
 } else {
     $connection_status = "<p class='success'>Connection successful</p>";
     
     // Query to fetch categories
     $query = "SELECT * FROM `category`";
-    $result = mysqli_query($conn, $query);
+    $result = $conn->query($query);
     
     if (!$result) {
-        $query_status = "<p class='error'>Query failed: " . mysqli_error($conn) . "</p>";
+        $query_status = "<p class='error'>Query failed: " . $conn->error . "</p>";
     } else {
         $query_status = "<p class='success'>Query successful</p>";
     }
@@ -343,7 +346,7 @@ if (!$conn) {
     
     <div class="container">
         <?php
-        if (isset($result) && mysqli_num_rows($result) > 0) {
+        if (isset($result) && $result->num_rows > 0) {
             echo "<table border='1'>
                 <thead>
                     <tr>
@@ -353,7 +356,7 @@ if (!$conn) {
                 </thead>
                 <tbody>";
                 
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($row = $result->fetch_assoc()) {
                 echo "<tr>
                     <td>" . $row["id"] . "</td>
                     <td>" . $row["category_name"] . "</td>
@@ -366,7 +369,7 @@ if (!$conn) {
         }
         
         if (isset($conn)) {
-            mysqli_close($conn);
+            $conn->close();
         }
         ?>
     </div>

@@ -1,14 +1,17 @@
 <?php
-    // Database connection
-    include __DIR__ . '/../db.php';
-
     //local development
     // $host = "localhost";
     // $user = "Farhan Alam";
     // $pass = "password@123";
     // $db = "bca-6th-sem";
 
-    $conn = new mysqli($host, $user, $pass, $db);
+    // $conn = mysqli_connect($host, $user, $pass, $db);
+
+    // Production connection
+    include __DIR__ . '/../db.php';
+
+    // Use the db() function to get connection
+    $conn = db();
 
     // Check connection
     if ($conn->connect_error) {
