@@ -8,25 +8,59 @@
  * @return mysqli A MySQL database connection object
  */
     function db() {
-        // Database configuration for local development
+        //local development
         // $host = "localhost";
         // $user = "Farhan Alam";
         // $pass = "password@123";
         // $db = "bca-6th-sem";
+        // Debug: Check what environment variables are available
+        $env_vars = [
+            'RAILWAY_ENVIRONMENT' => getenv('RAILWAY_ENVIRONMENT'),
+            'DATABASE_URL' => getenv('DATABASE_URL'),
+            'DB_HOST' => getenv('DB_HOST'),
+            'DB_USER' => getenv('DB_USER'),
+            'DB_PASSWORD' => getenv('DB_PASSWORD'),
+            'DB_NAME' => getenv('DB_NAME')
+        ];
         
-        // Database configuration for production
-        $host = "db";
-        $user = "root";
-        $pass = "example";
-        $db = "php_journey";
+        // Check if we're in Railway environment
+        if (getenv('RAILWAY_ENVIRONMENT') || getenv('DATABASE_URL')) {
+            // Railway environment - use environment variables
+            $host = getenv('DB_HOST') ?: 'localhost';
+            $user = getenv('DB_USER') ?: 'root';
+            $pass = getenv('DB_PASSWORD') ?: '';
+            $db = getenv('DB_NAME') ?: 'php_journey';
+            
+            // If DATABASE_URL is provided, parse it
+            if (getenv('DATABASE_URL')) {
+                $url = parse_url(getenv('DATABASE_URL'));
+                if ($url) {
+                    $host = $url['host'] ?? $host;
+                    $user = $url['user'] ?? $user;
+                    $pass = $url['pass'] ?? $pass;
+                    $db = ltrim($url['path'] ?? $db, '/');
+                }
+            }
+        } else {
+            // Local development environment
+            $host = "localhost";
+            $user = "root";
+            $pass = "";
+            $db = "php_journey";
+        }
+        
+        // Debug: Log connection attempt (remove in production)
+        error_log("Attempting database connection to: $host, user: $user, database: $db");
         
         // Create connection
         $conn = new mysqli($host, $user, $pass, $db);
         
         // Check connection
         if ($conn->connect_error) {
-            // Log the error (in a production environment, you might want to log to a file)
+            // Log the error with more details
             error_log("Database connection failed: " . $conn->connect_error);
+            error_log("Connection details - Host: $host, User: $user, Database: $db");
+            error_log("Environment variables: " . print_r($env_vars, true));
             
             // Return the connection object even with error
             // This allows the calling code to handle the error appropriately

@@ -14,7 +14,7 @@ $images = [
 
 $folder = __DIR__ . '/assets';
 if (!file_exists($folder)) {
-    mkdir($folder, 0777, true);
+    mkdir($folder, 0755, true);
 }
 
 foreach ($images as $name => $url) {

@@ -7,7 +7,7 @@
     if($result && $result->num_rows > 0) {
         $products = $result->fetch_all(MYSQLI_ASSOC);
     }
-    mysqli_close($conn);
+    $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">

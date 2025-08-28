@@ -9,7 +9,8 @@ if(!isset($_GET['file'])) {
 }
 
 $filename = $_GET['file'];
-$filepath = "uploads/" . $filename;
+$uploadsDir = __DIR__ . '/uploads';
+$filepath = $uploadsDir . "/" . $filename;
 
 // Basic security checks
 if(strpos($filename, '..') !== false || strpos($filename, '/') !== false) {
@@ -19,7 +20,7 @@ if(strpos($filename, '..') !== false || strpos($filename, '/') !== false) {
 }
 
 // Check if file exists and is within uploads directory
-if(file_exists($filepath) && is_file($filepath)) {
+if(file_exists($filepath) && is_file($filepath) && strpos(realpath($filepath), realpath($uploadsDir)) === 0) {
     // Delete the file
     if(unlink($filepath)) {
         $_SESSION['message'] = "<div class='alert alert-success'>File deleted successfully!</div>";

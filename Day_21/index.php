@@ -1,4 +1,7 @@
 <?php
+// Start session at the very beginning to avoid headers already sent error
+session_start();
+
 /******************************************
  * PHP File Handling Tutorial - Day 21
  * This script demonstrates various file operations:
@@ -24,15 +27,15 @@ $allowedTypes = [
 ];
 
 // Step 1: Create uploads directory if it doesn't exist
-// file_exists() checks if a file or directory exists
-// mkdir() creates a new directory
-// The third parameter 'true' in mkdir allows creation of nested directories
-if(!file_exists("uploads")) {
-    mkdir("uploads", 0777, true);
-    // 0777 means full permissions:
-    // - Owner can read, write, execute
-    // - Group can read, write, execute
-    // - Others can read, write, execute
+// Use a more appropriate path and permissions for Railway deployment
+$uploadsDir = __DIR__ . '/uploads';
+if(!file_exists($uploadsDir)) {
+    // Use 0755 permissions instead of 0777 for better security
+    // This gives owner full permissions, group and others read/execute
+    if(!mkdir($uploadsDir, 0755, true)) {
+        // If mkdir fails, try with default permissions
+        mkdir($uploadsDir, 0755, true);
+    }
 }
 
 // Step 2: Handle saving text to file
@@ -56,7 +59,7 @@ if(isset($_POST['save_text'])) {
     }
     
     // Open file in selected mode
-    $textFile = fopen("uploads/notes.txt", $fileMode);
+    $textFile = fopen($uploadsDir . "/notes.txt", $fileMode);
     
     if($textFile) {
         // Add a timestamp to each entry
@@ -76,14 +79,14 @@ if(isset($_POST['save_text'])) {
 
 // Step 3: Read existing content from the text file
 // This shows previously saved content in the textarea
-if(file_exists("uploads/notes.txt")) {
+if(file_exists($uploadsDir . "/notes.txt")) {
     // Open file in "read" mode
-    $textFile = fopen("uploads/notes.txt", "r");
+    $textFile = fopen($uploadsDir . "/notes.txt", "r");
     
     if($textFile) {
         // filesize() gets the size of the file in bytes
         // fread() reads that many bytes from the file
-        $fileContent = fread($textFile, filesize("uploads/notes.txt"));
+        $fileContent = fread($textFile, filesize($uploadsDir . "/notes.txt"));
         
         // Always close the file after using it
         fclose($textFile);
@@ -115,7 +118,7 @@ if(isset($_POST['upload'])) {
             $newFilename = uniqid() . '_' . $filename;
             
             // Move the uploaded file from temporary location to our uploads folder
-            if(move_uploaded_file($myfile, "uploads/" . $newFilename)) {
+            if(move_uploaded_file($myfile, $uploadsDir . "/" . $newFilename)) {
                 $uploadMessage = "<div class='alert alert-success'>File uploaded successfully!</div>";
             } else {
                 $uploadMessage = "<div class='alert alert-error'>Error uploading file. Please try again.</div>";
@@ -126,18 +129,35 @@ if(isset($_POST['upload'])) {
     }
 }
 
-// Step 5: Get list of all uploaded files
-// This is used to display the list of files in the interface
-$uploadedFiles = [];
-if(file_exists("uploads")) {
-    // scandir() gets all files in a directory
-    // array_diff() removes '.' and '..' which represent current and parent directories
-    $uploadedFiles = array_diff(scandir("uploads"), array('.', '..'));
+// Step 5: Handle file deletion
+// This happens when user clicks the "Delete" button
+if(isset($_GET['delete'])) {
+    $filename = $_GET['delete'];
+    $filepath = $uploadsDir . "/" . $filename;
+    
+    // Security check: Make sure the file is in our uploads directory
+    if(file_exists($filepath) && strpos(realpath($filepath), realpath($uploadsDir)) === 0) {
+        if(unlink($filepath)) {
+            $_SESSION['message'] = "<div class='alert alert-success'>File deleted successfully!</div>";
+        } else {
+            $_SESSION['message'] = "<div class='alert alert-error'>Error deleting file.</div>";
+        }
+    } else {
+        $_SESSION['message'] = "<div class='alert alert-error'>Invalid file.</div>";
+    }
+    
+    // Redirect to prevent form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
-// Handle delete confirmation message - Store in session instead of URL
-session_start();
-$uploadMessage = "";
+// This is used to display the list of files in the interface
+$uploadedFiles = [];
+if(file_exists($uploadsDir)) {
+    // scandir() gets all files in a directory
+    // array_diff() removes '.' and '..' which represent current and parent directories
+    $uploadedFiles = array_diff(scandir($uploadsDir), array('.', '..'));
+}
 
 // Check for messages in session
 if(isset($_SESSION['message'])) {
