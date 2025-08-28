@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHP Learning Journey</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="Daily PHP learning journey with examples, CRUD, file handling, and more.">
+    <meta property="og:title" content="PHP Learning Journey">
+    <meta property="og:description" content="Follow along a 25-day PHP journey with practical examples.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://farhan-php-journey.up.railway.app/">
+    <meta property="og:image" content="https://farhan-php-journey.up.railway.app/assets/product.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">

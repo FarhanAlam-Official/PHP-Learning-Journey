@@ -26,15 +26,30 @@ $allowedTypes = [
     'text/plain'   // .txt files
 ];
 
-// Step 1: Create uploads directory if it doesn't exist
-// Use a more appropriate path and permissions for Railway deployment
+// Step 1: Create uploads directory if it doesn't exist, with writable fallback
+// Prefer local project dir; if not writable (e.g., Railway immutable FS), fall back to system temp
 $uploadsDir = __DIR__ . '/uploads';
-if(!file_exists($uploadsDir)) {
-    // Use 0755 permissions instead of 0777 for better security
-    // This gives owner full permissions, group and others read/execute
-    if(!mkdir($uploadsDir, 0755, true)) {
-        // If mkdir fails, try with default permissions
-        mkdir($uploadsDir, 0755, true);
+$createdPrimary = true;
+if(!is_dir($uploadsDir)) {
+    // Suppress warnings and check result explicitly
+    $createdPrimary = @mkdir($uploadsDir, 0755, true);
+}
+
+$canWrite = is_dir($uploadsDir) && is_writable($uploadsDir);
+
+if(!$canWrite) {
+    // Fallback to system temp directory
+    $tempBase = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
+    $fallbackDir = $tempBase . DIRECTORY_SEPARATOR . 'php_uploads_day21';
+    if(!is_dir($fallbackDir)) {
+        @mkdir($fallbackDir, 0755, true);
+    }
+    if(is_dir($fallbackDir) && is_writable($fallbackDir)) {
+        $uploadsDir = $fallbackDir;
+        $canWrite = true;
+        $uploadMessage .= "<div class='alert alert-success'>Using temporary writable folder: " . htmlspecialchars($uploadsDir) . "</div>";
+    } else {
+        $uploadMessage .= "<div class='alert alert-error'>Storage is read-only. File save/upload features are disabled on this environment.</div>";
     }
 }
 
@@ -58,22 +73,26 @@ if(isset($_POST['save_text'])) {
             $fileMode = 'w';  // Default to write mode
     }
     
-    // Open file in selected mode
-    $textFile = fopen($uploadsDir . "/notes.txt", $fileMode);
-    
-    if($textFile) {
-        // Add a timestamp to each entry
-        $timestamp = date('Y-m-d H:i:s');
-        $formattedContent = "[$timestamp] " . $content . "\n";
+    if($canWrite) {
+        // Open file in selected mode
+        $textFile = @fopen($uploadsDir . "/notes.txt", $fileMode);
         
-        fwrite($textFile, $formattedContent);
-        fclose($textFile);
-        
-        // Show success message with mode info
-        $uploadMessage = "<div class='alert alert-success'>Text " . 
-            ($mode == 'append' ? 'appended' : 'saved') . " successfully!</div>";
+        if($textFile) {
+            // Add a timestamp to each entry
+            $timestamp = date('Y-m-d H:i:s');
+            $formattedContent = "[$timestamp] " . $content . "\n";
+            
+            fwrite($textFile, $formattedContent);
+            fclose($textFile);
+            
+            // Show success message with mode info
+            $uploadMessage .= "<div class='alert alert-success'>Text " . 
+                ($mode == 'append' ? 'appended' : 'saved') . " successfully!</div>";
+        } else {
+            $uploadMessage .= "<div class='alert alert-error'>Error saving text. Please check file permissions.</div>";
+        }
     } else {
-        $uploadMessage = "<div class='alert alert-error'>Error saving text. Please check file permissions.</div>";
+        $uploadMessage .= "<div class='alert alert-error'>Cannot save text: storage is not writable in this environment.</div>";
     }
 }
 
@@ -81,12 +100,17 @@ if(isset($_POST['save_text'])) {
 // This shows previously saved content in the textarea
 if(file_exists($uploadsDir . "/notes.txt")) {
     // Open file in "read" mode
-    $textFile = fopen($uploadsDir . "/notes.txt", "r");
+    $textFile = @fopen($uploadsDir . "/notes.txt", "r");
     
     if($textFile) {
         // filesize() gets the size of the file in bytes
         // fread() reads that many bytes from the file
-        $fileContent = fread($textFile, filesize($uploadsDir . "/notes.txt"));
+        $size = filesize($uploadsDir . "/notes.txt");
+        if($size > 0) {
+            $fileContent = fread($textFile, $size);
+        } else {
+            $fileContent = '';
+        }
         
         // Always close the file after using it
         fclose($textFile);
@@ -96,36 +120,40 @@ if(file_exists($uploadsDir . "/notes.txt")) {
 // Step 4: Handle file uploads
 // This happens when user clicks the "Upload File" button
 if(isset($_POST['upload'])) {
-    // Check if a file was actually uploaded and there are no errors
-    if(isset($_FILES['myfile']) && $_FILES['myfile']['error'] === 0) {
-        // Get information about the uploaded file
-        $myfile = $_FILES['myfile']['tmp_name'];  // Temporary location of uploaded file
-        $filename = $_FILES['myfile']['name'];     // Original name of the file
-        $filesize = $_FILES['myfile']['size'];     // Size in bytes
-        $filetype = $_FILES['myfile']['type'];     // MIME type of the file
-        
-        // Check 1: Is the file too big?
-        if($filesize > $maxFileSize) {
-            $uploadMessage = "<div class='alert alert-error'>File is too large. Maximum size is 5MB.</div>";
-        }
-        // Check 2: Is this type of file allowed?
-        elseif(!in_array($filetype, $allowedTypes)) {
-            $uploadMessage = "<div class='alert alert-error'>Invalid file type. Allowed types: JPEG, PNG, GIF, PDF, TXT</div>";
-        }
-        else {
-            // Generate a unique filename to prevent overwriting existing files
-            // uniqid() creates a unique ID based on the current time
-            $newFilename = uniqid() . '_' . $filename;
-            
-            // Move the uploaded file from temporary location to our uploads folder
-            if(move_uploaded_file($myfile, $uploadsDir . "/" . $newFilename)) {
-                $uploadMessage = "<div class='alert alert-success'>File uploaded successfully!</div>";
-            } else {
-                $uploadMessage = "<div class='alert alert-error'>Error uploading file. Please try again.</div>";
-            }
-        }
+    if(!$canWrite) {
+        $uploadMessage .= "<div class='alert alert-error'>Uploads are disabled: storage is not writable in this environment.</div>";
     } else {
-        $uploadMessage = "<div class='alert alert-error'>Please select a file to upload.</div>";
+        // Check if a file was actually uploaded and there are no errors
+        if(isset($_FILES['myfile']) && $_FILES['myfile']['error'] === 0) {
+            // Get information about the uploaded file
+            $myfile = $_FILES['myfile']['tmp_name'];  // Temporary location of uploaded file
+            $filename = $_FILES['myfile']['name'];     // Original name of the file
+            $filesize = $_FILES['myfile']['size'];     // Size in bytes
+            $filetype = $_FILES['myfile']['type'];     // MIME type of the file
+            
+            // Check 1: Is the file too big?
+            if($filesize > $maxFileSize) {
+                $uploadMessage .= "<div class='alert alert-error'>File is too large. Maximum size is 5MB.</div>";
+            }
+            // Check 2: Is this type of file allowed?
+            elseif(!in_array($filetype, $allowedTypes)) {
+                $uploadMessage .= "<div class='alert alert-error'>Invalid file type. Allowed types: JPEG, PNG, GIF, PDF, TXT</div>";
+            }
+            else {
+                // Generate a unique filename to prevent overwriting existing files
+                // uniqid() creates a unique ID based on the current time
+                $newFilename = uniqid() . '_' . $filename;
+                
+                // Move the uploaded file from temporary location to our uploads folder
+                if(@move_uploaded_file($myfile, $uploadsDir . "/" . $newFilename)) {
+                    $uploadMessage .= "<div class='alert alert-success'>File uploaded successfully!</div>";
+                } else {
+                    $uploadMessage .= "<div class='alert alert-error'>Error uploading file. Please try again.</div>";
+                }
+            }
+        } else {
+            $uploadMessage .= "<div class='alert alert-error'>Please select a file to upload.</div>";
+        }
     }
 }
 
@@ -137,7 +165,7 @@ if(isset($_GET['delete'])) {
     
     // Security check: Make sure the file is in our uploads directory
     if(file_exists($filepath) && strpos(realpath($filepath), realpath($uploadsDir)) === 0) {
-        if(unlink($filepath)) {
+        if(@unlink($filepath)) {
             $_SESSION['message'] = "<div class='alert alert-success'>File deleted successfully!</div>";
         } else {
             $_SESSION['message'] = "<div class='alert alert-error'>Error deleting file.</div>";
@@ -153,15 +181,18 @@ if(isset($_GET['delete'])) {
 
 // This is used to display the list of files in the interface
 $uploadedFiles = [];
-if(file_exists($uploadsDir)) {
+if(is_dir($uploadsDir)) {
     // scandir() gets all files in a directory
     // array_diff() removes '.' and '..' which represent current and parent directories
-    $uploadedFiles = array_diff(scandir($uploadsDir), array('.', '..'));
+    $scanned = @scandir($uploadsDir);
+    if($scanned !== false) {
+        $uploadedFiles = array_diff($scanned, array('.', '..'));
+    }
 }
 
 // Check for messages in session
 if(isset($_SESSION['message'])) {
-    $uploadMessage = $_SESSION['message'];
+    $uploadMessage = $_SESSION['message'] . $uploadMessage;
     // Clear the message from session immediately
     unset($_SESSION['message']);
 }
@@ -196,6 +227,17 @@ if(isset($_SESSION['message'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day 21 - Advanced File Handling</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="Day 21: Advanced PHP file handling - uploads, text editing, and more.">
+    <meta property="og:title" content="PHP Learning Journey - Day 21">
+    <meta property="og:description" content="Learn advanced file handling in PHP with uploads and editing.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://farhan-php-journey.up.railway.app/Day_21/index.php">
+    <meta property="og:image" content="https://farhan-php-journey.up.railway.app/assets/product.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
