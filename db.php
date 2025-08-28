@@ -21,17 +21,18 @@
         error_log("RAILWAY_ENVIRONMENT: " . (getenv('RAILWAY_ENVIRONMENT') ?: 'NOT SET'));
         
         // Check for Railway MySQL environment variables first
-        if (getenv('MYSQLHOST')) {
+        if (getenv('MYSQLHOST') && !empty(getenv('MYSQLHOST'))) {
             // Railway MySQL environment
             $host = getenv('MYSQLHOST');
             $user = getenv('MYSQLUSER') ?: 'root';
             $pass = getenv('MYSQLPASSWORD');
             $db = getenv('MYSQLDATABASE') ?: 'railway';
+            $port = getenv('MYSQLPORT') ?: 3306;
             
-            error_log("Using Railway MySQL variables: $host, $user, $db");
+            error_log("Using Railway MySQL variables: $host, $user, $db:$port");
         }
         // Check for MYSQL_URL (Railway's preferred method)
-        elseif (getenv('MYSQL_URL')) {
+        elseif (getenv('MYSQL_URL') && !empty(getenv('MYSQL_URL'))) {
             // Parse Railway's MYSQL_URL
             $url = parse_url(getenv('MYSQL_URL'));
             if ($url) {
@@ -39,15 +40,17 @@
                 $user = $url['user'];
                 $pass = $url['pass'];
                 $db = ltrim($url['path'], '/');
+                $port = $url['port'] ?? 3306;
                 
-                error_log("Using MYSQL_URL: $host, $user, $db");
+                error_log("Using MYSQL_URL: $host, $user, $db:$port");
             } else {
                 error_log("Failed to parse MYSQL_URL");
-                // Fallback to localhost
-                $host = "localhost";
+                // Fallback to Railway's default MySQL connection
+                $host = "containers-us-west-1.railway.app";
                 $user = "root";
-                $pass = "";
-                $db = "php_journey";
+                $pass = "example";
+                $db = "railway";
+                $port = 3306;
             }
         }
         // Check for Docker environment variables
@@ -57,8 +60,9 @@
             $user = getenv('PHP_DB_USER') ?: 'root';
             $pass = getenv('PHP_DB_PASS') ?: 'example';
             $db = getenv('PHP_DB_NAME') ?: 'php_journey';
+            $port = 3306;
             
-            error_log("Using Docker variables: $host, $user, $db");
+            error_log("Using Docker variables: $host, $user, $db:$port");
         }
         // Check if we're in Railway environment
         elseif (getenv('RAILWAY_ENVIRONMENT') || getenv('DATABASE_URL')) {
@@ -67,8 +71,9 @@
             $user = getenv('DB_USER') ?: 'root';
             $pass = getenv('DB_PASSWORD') ?: '';
             $db = getenv('DB_NAME') ?: 'php_journey';
+            $port = getenv('DB_PORT') ?: 3306;
             
-            error_log("Using Railway environment variables: $host, $user, $db");
+            error_log("Using Railway environment variables: $host, $user, $db:$port");
             
             // If DATABASE_URL is provided, parse it
             if (getenv('DATABASE_URL')) {
@@ -78,6 +83,7 @@
                     $user = $url['user'] ?? $user;
                     $pass = $url['pass'] ?? $pass;
                     $db = ltrim($url['path'] ?? $db, '/');
+                    $port = $url['port'] ?? $port;
                 }
             }
         } else {
@@ -86,20 +92,31 @@
             $user = "root";
             $pass = "";
             $db = "php_journey";
+            $port = 3306;
             
-            error_log("Using local development: $host, $user, $db");
+            error_log("Using local development: $host, $user, $db:$port");
         }
         
-        error_log("Final connection attempt: $host, $user, $db");
+        // Validate connection parameters
+        if (empty($host) || empty($user)) {
+            error_log("Invalid connection parameters - using fallback");
+            $host = "localhost";
+            $user = "root";
+            $pass = "";
+            $db = "php_journey";
+            $port = 3306;
+        }
+        
+        error_log("Final connection attempt: $host, $user, $db:$port");
         
         // Create connection
-        $conn = new mysqli($host, $user, $pass, $db);
+        $conn = new mysqli($host, $user, $pass, $db, (int)$port);
         
         // Check connection
         if ($conn->connect_error) {
             // Log the error
             error_log("Database connection failed: " . $conn->connect_error);
-            error_log("Attempted connection to: $host, user: $user, database: $db");
+            error_log("Attempted connection to: $host, user: $user, database: $db, port: $port");
             
             // Return the connection object with error (pages can handle this gracefully)
             return $conn;
