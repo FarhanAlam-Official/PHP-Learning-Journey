@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day 7 of PHP - Form Handling</title>
+    <?php include __DIR__ . '/includes/head.php'; ?>
     <!-- Google Fonts integration for modern typography -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>

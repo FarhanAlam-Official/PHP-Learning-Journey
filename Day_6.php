@@ -7,6 +7,7 @@
     <title>Day 6 of PHP - Product Showcase</title>
     <!-- Google Fonts integration for modern typography -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <?php include __DIR__ . '/includes/head.php'; ?>
     <style>
         /* 
         * CSS Variables (Custom Properties)

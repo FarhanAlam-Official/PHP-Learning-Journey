@@ -568,6 +568,7 @@ $demo_responses = [
     </style>
 </head>
 <body>
+    <?php include __DIR__ . '/includes/head.php'; ?>
     <div class="day-indicator">Day 24: API Development and RESTful Services</div>
     
     <div class="container">

@@ -1,80 +1,132 @@
 # PHP Learning Journey (25 Days)
 
-A modern, styled portfolio of 25 days of PHP learning covering fundamentals, forms, sessions, cookies, database work, CRUD, file management, encoding/decoding, email, API concepts and more. The homepage provides an overview, progress tracking, and quick access to each day. A separate Learning Path page visualizes milestones and offers encouragement messages.
+[![PHP Version](https://img.shields.io/badge/PHP-8.x-blue?logo=php)](https://www.php.net/)
+[![License](https://img.shields.io/badge/License-Educational-green.svg)](#-license)
+[![Deploy on Railway](https://img.shields.io/badge/Deploy-Railway-purple?logo=railway&logoColor=white)](https://railway.app/)
 
-## Highlights
-- Modern UI with semantic HTML/CSS and responsive layout
-- Sticky header, full-viewport hero, progress bars, cards and grids
-- Dedicated Learning Path page (`path.php`) with a timeline experience
-- File management demo (`Day_21`) using uploads directory
-- Organized day-by-day files: `Day_1.php` … `Day_25.php`, and mini-app subfolders
+[![GitHub Stars](https://img.shields.io/github/stars/FarhanAlam-Official/php-learning-journey?style=social)](https://github.com/FarhanAlam-Official/php-learning-journey/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/FarhanAlam-Official/php-learning-journey?style=social)](https://github.com/FarhanAlam-Official/php-learning-journey/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/FarhanAlam-Official/php-learning-journey)](https://github.com/FarhanAlam-Official/php-learning-journey/issues)
 
-## Requirements
-- XAMPP (Apache + PHP + MySQL)
-- PHP 8.x recommended (PHP 7.4+ should work)
-- MySQL 5.7+/MariaDB (bundled with XAMPP)
-- Browser: latest Chrome/Firefox/Edge/Safari
+A **modern 25-day guided journey through PHP** — from fundamentals to forms, sessions, cookies, MySQL, CRUD, file handling, and more.  
+This project is both a **learning reference** and a **deployable showcase**, designed to run locally, via Docker, or on Railway.
 
-## Quick Start (Local, XAMPP)
-1. Place this project folder inside your XAMPP htdocs (e.g. `C:\xampp\htdocs\PHP`).
-2. Start Apache and MySQL from the XAMPP Control Panel.
-3. Import the database (if provided):
-   - Open phpMyAdmin → create a database (e.g. `php_journey`).
-   - Import `database.sql` (if included) into that database.
-4. Configure DB connection:
-   - Create (or edit) `db.php` at the project root with your local credentials:
-     ```php
-     <?php
-     $host = 'localhost';
-     $user = 'root';        // XAMPP default
-     $pass = '';            // XAMPP default on Windows is empty
-     $name = 'php_journey'; // your database name
-     $conn = new mysqli($host, $user, $pass, $name);
-     if ($conn->connect_error) {
-         die('Database connection failed: ' . $conn->connect_error);
-     }
-     ?>
-     ```
-   - If you don’t need DB-backed days, you can skip this step; affected days will show an error message if the DB is not configured.
-5. Ensure `uploads/` folder exists and is writable (for `Day_21`).
-6. Visit `http://localhost/PHP/` in your browser. The Learning Path is at `http://localhost/PHP/path.php`.
+## ✨ Features
+- Responsive UI with **cards, grids, progress bars, and sticky indicators**
+- **Centralized `<head>` include** for favicons, manifest, and SEO assets
+- SEO ready: `robots.txt`, `sitemap.xml`, `site.webmanifest`
+- File handling demos with **safe fallbacks** for read-only filesystems (`Day_21`)
+- Clean and extensible **database helper** (`db.php`) with support for Local, Docker, and Railway environments
 
-## Project Structure
-- `index.php` — Landing page with overview, stats, days grid, and site styles/scripts
-- `path.php` — Standalone Learning Path page (same header/footer styling)
-- `includes/learning_path.php` — Timeline section markup (used by `path.php`)
-- `Day_N.php` — Top-level day files (1–25)
-- `Day_10/`, `Day_12/`, `Day_13/`, `Day_16/`, `Day_19/`, `Day_21/` — Multi-file day demos
-- `assets/` — Images used by day demos and landing page
-- `uploads/` — Runtime upload directory for file demos (safe to clear)
-- `db.php` — Local database credentials (not versioned for security; create locally)
+## 🧰 Tech Stack
+- PHP 8.x (7.4+ generally works)
+- MySQL/MariaDB
+- Vanilla HTML/CSS (no build step)
 
-## What Uses the Database?
-- `Day_14` – Database connection
-- `Day_15` – Database queries
-- `Day_16` – CRUD operations (with subpages)
-- `Day_17` – Product database
-- `Day_19` – User management (with subpages)
-- `Day_20` – Advanced CRUD
-- `Day_21` – File management (uses filesystem; DB optional depending on your setup)
+## 🗂️ Project Structure
+```
 
-If you don’t import the database, these days will not function fully. The rest of the days (forms, sessions, cookies, etc.) generally work without a DB.
+├── index.php              # Landing page (overview & days grid)
+├── path.php               # Learning Path timeline
+├── includes/
+│   ├── head.php           # Centralized <head> (favicons, manifest, theme-color)
+│   └── learning_path.php  # Learning Path section
+├── Day_1.php … Day_25.php # Day pages (some with folders for demos)
+│   ├── Day_10/
+│   ├── Day_12/
+│   ├── Day_13/
+│   ├── Day_16/
+│   ├── Day_19/
+│   └── Day_21/
+├── assets/                # Images for demos and landing
+├── favicon/               # Complete favicon set + manifest
+├── uploads/               # Runtime uploads (safe to clear)
+├── database.sql           # Sample database
+├── robots.txt
+├── sitemap.xml
+└── site.webmanifest
 
-## Rebuilding the Database (If No SQL Provided)
-If `database.sql` isn’t included or you need to recreate it:
-1. On your dev machine, open phpMyAdmin, select the database, and use Export → Quick → SQL → save as `database.sql` in the project root.
-2. Share `database.sql` with the project. Your reviewer can then import it following the Quick Start steps.
+```
 
-## Troubleshooting
-- White screen/DB errors on DB days: check `db.php` credentials; ensure MySQL is running; ensure the database has been imported.
-- File upload errors: confirm `uploads/` exists and is writable by PHP/Apache.
-- Asset paths broken: ensure the project folder name matches your URL path (e.g. `PHP/`).
-- PHP version differences: If using older PHP (≤7.3), enable error reporting to identify any compatibility issues.
+## 🖼️ Favicons & Manifest
+Favicons live in `/favicon`. To include on a page:  
 
-## Reviewer Notes
-- The UI intentionally shows a polished landing and a dedicated Learning Path to contextualize the 25‑day journey.
-- Navigation: Overview, Progress, Days on `index.php`; Learning Path on `path.php`.
-- Code is self-contained; no external build steps are required.
+- **Root pages:**  
+  ```php
+  <?php include __DIR__ . '/includes/head.php'; ?>
+  ```
 
-## License
-This project is shared for educational/review purposes. You may adapt it for learning, personal use, or coursework submissions.
+- **Subfolders (e.g., Day_21):**
+
+  ```php
+  <?php include __DIR__ . '/../includes/head.php'; ?>
+  ```
+
+## 🧑‍💻 Local Setup (XAMPP)
+1. Copy this folder to `C:\xampp\htdocs\PHP` (or similar).
+2. Start Apache and MySQL in XAMPP.
+3. Create DB and import `database.sql` (phpMyAdmin → Import) if you plan to use DB‑backed days.
+4. DB config is automatic via `db.php` for Local (defaults to host `localhost`, user `root`, empty password, DB `php_journey`).
+5. Ensure `uploads/` exists. Visit `http://localhost/PHP/`.
+
+## 🐳 Run with Docker
+
+The repo includes a ready-to-use **Dockerfile** and **docker-compose.yml**.
+
+**Start services:**
+
+```bash
+docker compose up --build
+```
+
+* App: [http://localhost:8080](http://localhost:8080)
+* MySQL: `localhost:3307`
+
+MySQL auto-seeds using `database.sql`.
+
+## ☁️ Deploy on Railway
+
+`db.php` supports Railway’s environment variables automatically.
+
+1. Add a **MySQL service** in Railway.
+2. In your PHP service settings → Variables, add values from DB service “Connect” tab:
+
+   * `MYSQLHOST`, `MYSQLUSER`, `MYSQLPASSWORD`, `MYSQLDATABASE`, `MYSQLPORT`
+3. Deploy PHP service.
+4. Import `database.sql` using any MySQL client.
+
+## ☁️ Railway Deployment
+`db.php` supports Railway environment variables. Recommended approach:
+1. Add a MySQL service in Railway.
+2. In your PHP service Variables, add the MySQL env vars (copy from the DB service Connect tab):
+   - `MYSQLHOST`, `MYSQLUSER`, `MYSQLPASSWORD`, `MYSQLDATABASE`, `MYSQLPORT` (3306)
+3. Deploy; import `database.sql` using your preferred MySQL client.
+
+Notes:
+- `Day_21` uses a safe temp‑dir fallback if the project filesystem is read‑only.
+- Centralized head include ensures favicons work across all pages.
+
+## 📚 Database-Backed Lessons
+
+* **Day_14** — DB connectivity
+* **Day_15** — Basic queries
+* **Day_16** — CRUD (multi-page demo)
+* **Day_17** — Products
+* **Day_19** — User management (multi-page demo)
+* **Day_20** — Advanced CRUD
+
+> ⚠️ If the database isn’t imported, these pages will gracefully show empty states or fallback messages.
+
+## 🔎 Troubleshooting
+- DB errors: confirm vars/credentials and that the DB is reachable; import `database.sql`.
+- Upload errors: ensure `uploads/` exists; on Railway a temp fallback path is used automatically.
+- Missing favicons: ensure pages include `includes/head.php` (use correct path based on folder).
+- “Headers already sent” with sessions: call `session_start()` before any output.
+
+## 🔧 Maintenance
+- Centralize future `<head>` edits in `includes/head.php`.
+- Add new pages to `sitemap.xml` for better SEO.
+- Keep `robots.txt` pointing to the correct sitemap URL.
+
+## 📄 License
+Educational project. Free to adapt for learning, personal use, and coursework.

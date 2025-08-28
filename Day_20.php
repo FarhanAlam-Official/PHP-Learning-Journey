@@ -554,7 +554,7 @@
             </table>            
         </div>
         
-        <!-- Learning Section with Cards
+        <!-- Learning Section with Cards -->
         <div class="learning-section">
             <h2 class="learning-title">What We Learned - Day 19</h2>
             
@@ -580,7 +580,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     
     <!-- Enhanced Footer -->
     <div class="footer">

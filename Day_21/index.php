@@ -227,9 +227,7 @@ if(isset($_SESSION['message'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day 21 - Advanced File Handling</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <?php include __DIR__ . '/../includes/head.php'; ?>
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#4f46e5">
     <meta name="description" content="Day 21: Advanced PHP file handling - uploads, text editing, and more.">
@@ -741,9 +739,7 @@ if(isset($_SESSION['message'])) {
             </div>
         </div>
 
-        <div class="date-stamp">
-            <?php echo date('l, F j, Y'); ?>
-        </div>
+
     </div>
 
     <!-- Enhanced Footer -->

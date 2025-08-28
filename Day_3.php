@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day 3 of PHP</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <?php include __DIR__ . '/includes/head.php'; ?>
     <style>
         :root {
             --primary: #4f46e5;

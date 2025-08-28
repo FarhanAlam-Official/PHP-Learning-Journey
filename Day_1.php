@@ -424,11 +424,11 @@
             
             <h3>Simple Interest Calculation Results</h3>
             <div class="code-output">
-                <p>Principal: <?= $principal ?></p>
-                <p>Rate: <?= $rate ?>%</p>
-                <p>Time: <?= $time ?> years</p>
-                <p>Simple Interest: <?= $simpleInterest ?></p>
-                <p>Total Amount: <?= $totalAmount ?></p>
+                <p>Principal: <?= isset($principal) ? $principal : '' ?></p>
+                <p>Rate: <?= isset($rate) ? $rate : '' ?>%</p>
+                <p>Time: <?= isset($time) ? $time : '' ?> years</p>
+                <p>Simple Interest: <?= isset($simpleInterest) ? $simpleInterest : '' ?></p>
+                <p>Total Amount: <?= isset($totalAmount) ? $totalAmount : '' ?></p>
             </div>
             
             <div class="code-explanation">
