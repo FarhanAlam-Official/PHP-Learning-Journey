@@ -338,8 +338,8 @@
                 $tomorrow = mktime(0, 0, 0, date("m"), date("d")+1, date("Y"));
                 echo "Tomorrow's Date: " . date("Y-m-d", $tomorrow) . "<br>";
                 
-                // Days in current month
-                $daysInMonth = cal_days_in_month(CAL_GREGORIAN, date("m"), date("Y"));
+                // Days in current month (portable, no calendar extension required)
+                $daysInMonth = (int)date('t');
                 echo "Days in Current Month: " . $daysInMonth . "<br>";
                 ?>
             </div>
@@ -440,7 +440,7 @@
     </div>
     
     <!-- Enhanced Footer -->
-    <div class="footer">
+    <div class="footer" style="clear: both;">
         <div class="footer-title">
             📚 PHP Learning Journey - Day 1
         </div>

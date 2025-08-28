@@ -205,23 +205,23 @@
             
             <div class="learning-grid">
                 <div class="learning-card">
-                    <h3><i class="fas fa-database"></i> CRUD Operations</h3>
-                    <p>We implemented a complete CRUD (Create, Read, Update, Delete) system for user management, allowing us to perform all necessary database operations through a user-friendly interface.</p>
+                    <h3><i class="fas fa-database"></i> CRUD Foundations</h3>
+                    <p>Built the core CRUD (Create, Read, Update, Delete) flows for users, establishing a solid base to iterate on in Day 20.</p>
                 </div>
                 
                 <div class="learning-card">
-                    <h3><i class="fas fa-shield-alt"></i> Data Security</h3>
-                    <p>We used prepared statements to prevent SQL injection, and implemented proper data validation and sanitization with htmlspecialchars() to prevent XSS attacks.</p>
+                    <h3><i class="fas fa-shield-alt"></i> Input Hygiene</h3>
+                    <p>Validated and sanitized inputs and outputs to mitigate XSS, and prepared the codebase for moving to prepared statements.</p>
                 </div>
                 
                 <div class="learning-card">
-                    <h3><i class="fas fa-paint-brush"></i> UI/UX Design</h3>
-                    <p>We created a clean, responsive user interface with visual status indicators, action buttons, and proper spacing to enhance usability and provide a better user experience.</p>
+                    <h3><i class="fas fa-layer-group"></i> Structure & Navigation</h3>
+                    <p>Split pages by responsibility (list, add, edit, delete) and introduced consistent navigation and feedback messages.</p>
                 </div>
                 
                 <div class="learning-card">
-                    <h3><i class="fas fa-code"></i> Modular Code Structure</h3>
-                    <p>We organized our code into separate files for different operations (view, add, edit, delete), making the codebase more maintainable and easier to understand.</p>
+                    <h3><i class="fas fa-seedling"></i> UX Baseline</h3>
+                    <p>Set the baseline styling for tables, actions, and states, paving the way for Day 20’s refinements and search.</p>
                 </div>
             </div>
         </div>

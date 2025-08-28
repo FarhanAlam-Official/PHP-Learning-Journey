@@ -20,7 +20,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 19 of PHP - User Management System</title>
+    <title>Day 20 of PHP - User Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -556,27 +556,27 @@
         
         <!-- Learning Section with Cards -->
         <div class="learning-section">
-            <h2 class="learning-title">What We Learned - Day 19</h2>
+            <h2 class="learning-title">What We Learned - Day 20</h2>
             
             <div class="learning-grid">
                 <div class="learning-card">
-                    <h3><i class="fas fa-database"></i> CRUD Operations</h3>
-                    <p>We implemented a complete CRUD (Create, Read, Update, Delete) system for user management, allowing us to perform all necessary database operations through a user-friendly interface.</p>
+                    <h3><i class="fas fa-filter"></i> Search & Filtering</h3>
+                    <p>Implemented a search bar with server-side filtering. Used prepared statements with LIKE patterns to safely query by username or email.</p>
                 </div>
                 
                 <div class="learning-card">
-                    <h3><i class="fas fa-shield-alt"></i> Data Security</h3>
-                    <p>We used proper data sanitization with htmlspecialchars() to prevent XSS attacks and implemented confirmation dialogs for destructive actions to prevent accidental data loss.</p>
+                    <h3><i class="fas fa-lock"></i> Prepared Statements</h3>
+                    <p>Switched from raw queries to prepared statements to prevent SQL injection and handle dynamic input securely.</p>
                 </div>
                 
                 <div class="learning-card">
-                    <h3><i class="fas fa-paint-brush"></i> UI/UX Design</h3>
-                    <p>We created a clean, responsive user interface with visual status indicators, action buttons, and proper spacing to enhance usability and provide a better user experience.</p>
+                    <h3><i class="fas fa-table"></i> Table UX Enhancements</h3>
+                    <p>Improved table readability with subtle hover states, header accents, and consistent spacing for better scanning.</p>
                 </div>
                 
                 <div class="learning-card">
-                    <h3><i class="fas fa-code"></i> Modular Code Structure</h3>
-                    <p>We organized our code into separate files for different operations (view, add, edit, delete), making the codebase more maintainable and easier to understand.</p>
+                    <h3><i class="fas fa-circle"></i> Status Badges</h3>
+                    <p>Introduced dotted status indicators (Active/Inactive) with accessible color contrast and small visual accents.</p>
                 </div>
             </div>
         </div>
