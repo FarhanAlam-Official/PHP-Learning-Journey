@@ -13,18 +13,17 @@
         // $user = "Farhan Alam";
         // $pass = "password@123";
         // $db = "bca-6th-sem";
-        // Debug: Check what environment variables are available
-        $env_vars = [
-            'RAILWAY_ENVIRONMENT' => getenv('RAILWAY_ENVIRONMENT'),
-            'DATABASE_URL' => getenv('DATABASE_URL'),
-            'DB_HOST' => getenv('DB_HOST'),
-            'DB_USER' => getenv('DB_USER'),
-            'DB_PASSWORD' => getenv('DB_PASSWORD'),
-            'DB_NAME' => getenv('DB_NAME')
-        ];
         
-        // Check for Docker environment variables first
-        if (getenv('PHP_DB_HOST')) {
+        // Check for Railway MySQL environment variables first
+        if (getenv('MYSQLHOST')) {
+            // Railway MySQL environment
+            $host = getenv('MYSQLHOST');
+            $user = getenv('MYSQLUSER') ?: 'root';
+            $pass = getenv('MYSQLPASSWORD');
+            $db = getenv('MYSQLDATABASE') ?: 'railway';
+        }
+        // Check for Docker environment variables
+        elseif (getenv('PHP_DB_HOST')) {
             // Docker environment
             $host = getenv('PHP_DB_HOST') ?: 'db';
             $user = getenv('PHP_DB_USER') ?: 'root';
@@ -57,21 +56,16 @@
             $db = "php_journey";
         }
         
-        // Debug: Log connection attempt (remove in production)
-        error_log("Attempting database connection to: $host, user: $user, database: $db");
-        
         // Create connection
         $conn = new mysqli($host, $user, $pass, $db);
         
         // Check connection
         if ($conn->connect_error) {
-            // Log the error with more details
+            // Log the error
             error_log("Database connection failed: " . $conn->connect_error);
-            error_log("Connection details - Host: $host, User: $user, Database: $db");
-            error_log("Environment variables: " . print_r($env_vars, true));
+            error_log("Attempted connection to: $host, user: $user, database: $db");
             
-            // Return the connection object even with error
-            // This allows the calling code to handle the error appropriately
+            // Return the connection object with error (pages can handle this gracefully)
             return $conn;
         }
         
